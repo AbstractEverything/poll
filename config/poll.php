@@ -8,7 +8,8 @@ return [
     // Number of polls per page
     'per_page' => 10,
 
-    // The middleware used to protect certain routes
+    // The middleware used to protect certain routes, this can be
+    // set to null to disable it entirely
     'admin_middleware' => 'admin',
 
     // To use the default views from the package use 'poll::'
