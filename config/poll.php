@@ -5,9 +5,6 @@ return [
     // The maximum number of options a poll can be created with
     'max_options' => 10,
 
-    // The uri prefix
-    'route_prefix' => 'polls',
-
     // Number of polls per page
     'per_page' => 10,
 
