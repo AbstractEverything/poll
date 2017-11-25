@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/AbstractEverything/poll.svg?branch=master)](https://travis-ci.org/AbstractEverything/poll)
+
 # Poll Package for Laravel 5.5
 
 ## Installation
