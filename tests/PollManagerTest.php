@@ -24,7 +24,7 @@ class PollManagerTest extends TestCase
         $poll = $pm->create($this->getSamplePollData(), true, true);
         $optionId = $poll->options()->first()->id;
 
-        $vc->vote(1, $optionId);
+        $vc->cast(1, $optionId);
     }
 
     /**
@@ -37,9 +37,9 @@ class PollManagerTest extends TestCase
         $poll = $pm->create($this->getSamplePollData(), false);
         $optionId = $poll->options()->first()->id;
 
-        $vc->vote(1, $optionId);
+        $vc->cast(1, $optionId);
         // Attempt vote again to trigger exception
-        $vc->vote(1, $optionId);
+        $vc->cast(1, $optionId);
     }
 
     public function test_it_deletes_poll_including_options_and_votes()
@@ -48,7 +48,7 @@ class PollManagerTest extends TestCase
         $vc = resolve(VoteCaster::class);
         $poll = $pm->create($this->getSamplePollData());
         $optionId = $poll->options()->first()->id;
-        $vc->vote(1, $optionId);
+        $vc->cast(1, $optionId);
         $pm->delete($poll->id);
 
         $this->assertEquals(0, Poll::count());

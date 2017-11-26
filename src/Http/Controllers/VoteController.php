@@ -47,7 +47,7 @@ class VoteController extends BaseController
 
         try
         {
-            $this->voteCaster->vote(auth()->user()->id, $request->input('option_id'));
+            $this->voteCaster->cast(auth()->user()->id, $request->input('option_id'));
         }
         catch (DuplicateVoteException $e)
         {

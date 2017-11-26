@@ -40,7 +40,7 @@ class VoteCaster
      * @param  integer $optionId
      * @return App\Models\Vote
      */
-    public function vote($userId, $optionId)
+    public function cast($userId, $optionId)
     {
         $poll = $this->option->find($optionId)->poll;
 
