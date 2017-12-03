@@ -7,7 +7,7 @@ use AbstractEverything\Poll\Models\Poll;
 use AbstractEverything\Poll\Models\Vote;
 use AbstractEverything\Poll\Exceptions\DuplicateVoteException;
 use AbstractEverything\Poll\Exceptions\PollClosedException;
-use AbstractEverything\Poll\Exceptions\PollOptionsException;
+use AbstractEverything\Poll\Exceptions\OptionRangeException;
 use Exception;
 use Illuminate\Database\DatabaseManager as DBM;
 
@@ -48,21 +48,44 @@ class PollManager
     }
 
     /**
-     * Create a new poll
+     * Create a new poll the input data should be in the following format:
+     * 
+     * 'title' => 'Poll title',
+     * 'description' => 'Poll description',
+     * 'options' => ['cats', 'dogs', 'fish'],
+     * 'ends_at' => datetime(), // not required, default: null
+     * 'multivote' => boolean, // not required, default: true
+     * 'closed' => boolean, // not required, default: false
+     * 'ends_at' => a valid date according to strtotime()
      * 
      * @param  array   $input
-     * @param  boolean $multivote
-     * @param  boolean $closed
      * @return App\Models\Poll
      */
-    public function create(array $input = [], $multivote = true, $closed = false)
+    public function create(array $input = [])
     {
-        if (count($input['options']) <= 1 || count($input['options']) > config('poll.max_options'))
+        if ( ! isset($input['multichoice']))
         {
-            throw new PollOptionsException;
+            $input['multichoice'] = true;
         }
 
-        if ( ! isset($input['ends_at'])) $input['ends_at'] = null;
+        if ( ! isset($input['closed']))
+        {
+            $input['closed'] = false;
+        }
+
+        if ( ! isset($input['ends_at']) || $input['ends_at'] == '')
+        {
+            $input['ends_at'] = null;
+        }
+        else
+        {
+            $input['ends_at'] = date('Y-m-d H:i:s', strtotime($input['ends_at']));
+        }
+
+        if (count($input['options']) <= 1 || count($input['options']) > config('poll.max_options'))
+        {
+            throw new OptionRangeException;
+        }
 
         $this->db->beginTransaction();
 
@@ -71,8 +94,8 @@ class PollManager
             $poll = $this->poll->create([
                 'title' => $input['title'],
                 'description' => $input['description'],
-                'closed' => $closed,
-                'multivote' => $multivote,
+                'closed' => $input['closed'],
+                'multichoice' => $input['multichoice'],
                 'ends_at' => $input['ends_at'],
             ]);
 

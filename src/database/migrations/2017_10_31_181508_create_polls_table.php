@@ -17,7 +17,7 @@ class CreatePollsTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->text('description');
-            $table->boolean('multivote')->default(true);
+            $table->boolean('multichoice')->default(false);
             $table->boolean('closed')->default(false);
             $table->dateTime('ends_at')->nullable()->default(null);
             $table->timestamps();

@@ -3,7 +3,9 @@
 namespace AbstractEverything\Poll\Http\Controllers;
 
 use AbstractEverything\Poll\Exceptions\DuplicateVoteException;
+use AbstractEverything\Poll\Exceptions\InvalidOptionException;
 use AbstractEverything\Poll\Exceptions\PollClosedException;
+use AbstractEverything\Poll\Exceptions\PollTimeoutException;
 use AbstractEverything\Poll\VoteCaster;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
@@ -41,13 +43,17 @@ class VoteController extends BaseController
             abort(403, 'Not logged in!');
         }
 
-        $this->validate($request, [
-            'option_id' => 'exists:options,id',
+        $request->validate([
+            'poll_id' => 'exists:polls,id',
         ]);
 
         try
         {
-            $this->voteCaster->cast(auth()->user()->id, $request->input('option_id'));
+            $this->voteCaster->cast(
+                auth()->user(),
+                $request->input('poll_id'),
+                $request->input('options')
+            );
         }
         catch (DuplicateVoteException $e)
         {
@@ -57,9 +63,17 @@ class VoteController extends BaseController
         {
             abort(400, 'This poll is closed');
         }
+        catch (PollTimeoutException $e)
+        {
+            abort(400, 'You can no longer vote in this poll');
+        }
+        catch (InvalidOptionException $e)
+        {
+            abort(400, 'You voted on an option that does not exist');
+        }
 
         return redirect()
-            ->route(config('poll.views_base_path').'show', $request->input('poll_id'))
+            ->route('polls.show', $request->input('poll_id'))
             ->with('status', 'Voted successfully');
     }
 }

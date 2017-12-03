@@ -2,6 +2,9 @@
 
 return [
 
+    // The title used for poll pages
+    'title' => 'Polls',
+
     // The maximum number of options a poll can be created with
     'max_options' => 10,
 

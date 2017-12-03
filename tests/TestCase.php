@@ -99,7 +99,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
             'options' => [
                 'cats',
                 'dogs',
-            ]
+            ],
         ];
     }
 }

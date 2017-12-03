@@ -34,3 +34,7 @@ To publish package assets run: `php artisan vendor:publish --provider=AbstractEv
 * Views to: `resources/vendor/abstracteverything/poll`
 * Config to: `config/poll.php`
 * Migrations to `database/migrations`
+
+## Configuration
+
+See `config/poll.php` for configuration details.

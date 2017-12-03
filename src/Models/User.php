@@ -7,10 +7,14 @@
 
 namespace AbstractEverything\Poll\Models;
 
+use AbstractEverything\Poll\Extras\PollUser;
+use AbstractEverything\Poll\Extras\PollUserInterface;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements PollUserInterface
 {
+    use PollUser;
+
     /**
      * @var array
      */

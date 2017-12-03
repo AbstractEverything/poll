@@ -64,7 +64,7 @@ class PollController extends BaseController
     public function create(Request $request)
     {
         $title = 'Create new poll';
-        $options = ($request->input('options') > 10) ? 10 : $request->input('options');
+        $options = ($request->input('options') > config('poll.max_options')) ? config('poll.max_options') : $request->input('options');
 
         return view(config('poll.views_base_path').'create', compact('title', 'options'));
     }
@@ -83,6 +83,8 @@ class PollController extends BaseController
                 'title' => $request->input('title'),
                 'description' => $request->input('description'),
                 'options' => $request->input('options'),
+                'multichoice' => $request->input('multichoice'),
+                'ends_at' => $request->input('ends_at'),
             ]);
         }
         catch (PollOptionsException $e)
@@ -120,7 +122,7 @@ class PollController extends BaseController
         $this->pollManager->delete($id);
 
         return redirect()
-            ->route('poll::index')
+            ->route('polls.index')
             ->with('status.success', 'Poll deleted succesfully');
     }
 }

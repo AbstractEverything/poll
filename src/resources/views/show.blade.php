@@ -20,12 +20,14 @@
         @endforeach
         <p>Total votes: {{ $totalVotes }}</p>
         <hr />
-        @include('poll::forms.vote_options', ['options' => $poll->options])
+        @include('poll::forms.options', ['options' => $poll->options])
     </div>
 </div>
 
-<form action="{{ route('polls.destroy', $poll->id) }}" method="POST" role="form">
-    <button type="submit" class="btn btn-danger">Delete poll</button>
-</form>
+@auth(config('poll.admin_middleware'))
+    <form action="{{ route('polls.destroy', $poll->id) }}" method="POST" role="form">
+        <button type="submit" class="btn btn-danger">Delete poll</button>
+    </form>
+@endauth
 
 @endsection

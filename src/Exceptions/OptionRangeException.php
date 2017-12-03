@@ -4,7 +4,7 @@ namespace AbstractEverything\Poll\Exceptions;
 
 use Exception;
 
-class PollOptionsException extends Exception
+class OptionRangeException extends Exception
 {
 
 }
