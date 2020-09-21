@@ -29,12 +29,42 @@ Optionally register the following two facades in `config/app.php`:
 
 ## Publishing assets
 
-To publish package assets run: `php artisan vendor:publish --provider=AbstractEverything\Poll\PollServiceProvider` this will publish the following files:
+To publish package assets run: `php artisan vendor:publish` and choose `AbstractEverything\Poll\PollServiceProvider` this will publish the following files:
 
 * Views to: `resources/vendor/abstracteverything/poll`
 * Config to: `config/poll.php`
 * Migrations to `database/migrations`
 
+Run the database migrations by running `php artisan migrate`
+
+## Setting up the poll user
+
+The user class needs to implement the `AbstractEverything\Poll\Extras\PollUserInterface` interface and use the `AbstractEverything\Poll\Extras\PollUser` trait.
+
+## Overriding default routes
+
+The package ships with a default set of routes:
+
+* `/polls` - polls.index (GET)
+* `/polls` - polls.store (POST)
+* `/polls/create` - polls.create (GET)
+* `/polls/{poll}` - polls.show (GET)
+* `/polls/{poll}` - polls.destroy (GET)
+* `/votes` - votes.store (POST)
+
+You can override these by redefining a route with the same name:
+
+```
+Route::get('custom_create_page', [
+    'as' => 'polls.create',
+    'uses' => '\AbstractEverything\Poll\Http\Controllers\PollController@create',
+]);
+```
+
+## Middleware configuration
+
+Routes for creating, destroying polls can be [protected by middleware](https://laravel.com/docs/5.5/middleware). In `config/poll.php` you can set which middleware should be used.
+
 ## Configuration
 
-See `config/poll.php` for configuration details.
+Other configuration options are avaliable in `config/poll.php`.
