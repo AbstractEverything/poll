@@ -2,7 +2,6 @@
 
 namespace AbstractEverything\Poll\Http\Controllers;
 
-use AbstractEverything\Poll\Exceptions\PollOptionsException;
 use AbstractEverything\Poll\Http\Requests\CreatePollRequest;
 use AbstractEverything\Poll\Models\Option;
 use AbstractEverything\Poll\Models\Poll;
@@ -11,6 +10,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Support\Facades\DB;
+use AbstractEverything\Poll\Exceptions\InvalidOptionException;
 
 class PollController extends BaseController
 {
@@ -29,7 +29,7 @@ class PollController extends BaseController
 
     /**
      * Constructor
-     * 
+     *
      * @param Poll        $poll
      * @param PollManager $pollManager
      */
@@ -87,7 +87,7 @@ class PollController extends BaseController
                 'ends_at' => $request->input('ends_at'),
             ]);
         }
-        catch (PollOptionsException $e)
+        catch (InvalidOptionException $e)
         {
             abort(400, 'At poll must contain between 1 and '.config('max_options').' options');
         }
@@ -95,7 +95,7 @@ class PollController extends BaseController
         return redirect()
             ->route('polls.index')
             ->with('status.success', 'Poll created succesfully');
-    }   
+    }
 
     /**
      * Display the specified resource.
